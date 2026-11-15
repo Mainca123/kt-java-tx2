@@ -3,7 +3,7 @@ import subprocess
 root=Path(__file__).resolve().parents[1]
 out=root/'evidence'; out.mkdir(exist_ok=True)
 commands={
-    'kubernetes-pods.txt':['minikube','kubectl','--','-n','tx2-ecommerce','get','pods','-o','wide'],
+    'kubernetes-pods.txt':['minikube','kubectl','--','-n','tx2-ecommerce','get','pods'],
     'kubernetes-services.txt':['minikube','kubectl','--','-n','tx2-ecommerce','get','services,pvc'],
     'kubernetes-deployments.json':['minikube','kubectl','--','-n','tx2-ecommerce','get','deployments','-o','json'],
 }

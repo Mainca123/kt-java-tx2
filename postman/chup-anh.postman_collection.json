@@ -1,0 +1,369 @@
+{
+  "info": {
+    "name": "HỆ THỐNG E-COMMERCE MICROSERVICES - Chụp ảnh API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "API chụp ảnh bằng Postman UI. Đích localhost:18081 (Minikube). Chạy từng request theo thứ tự và chụp kết quả thật. Bước 02 và 04 tự lưu ID. Bước 11-12 thực hiện sau khi đã chụp stock=8."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:18081"
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Danh sách sản phẩm",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/products",
+        "description": "Danh sách sản phẩm hiện có."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Tạo sản phẩm demo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/products",
+        "description": "Ghi lại id sản phẩm trả về. Collection tự lưu productId.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"San pham demo Postman\", \"price\": 250000, \"stock\": 10}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "const p = pm.response.json();",
+              "pm.collectionVariables.set(\"productId\", p.id);",
+              "pm.collectionVariables.unset(\"orderId\");",
+              "pm.test(\"Ton kho ban dau 10\", () => pm.expect(p.stock).to.eql(10));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Xem sản phẩm trước khi đặt",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "description": "Tồn kho stock = 10."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Stock truoc khi dat = 10\", () => pm.expect(pm.response.json().stock).to.eql(10));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Tạo đơn hàng",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "description": "Bấm Send một lần. totalPrice = 500000; ban đầu status = PENDING. Collection tự lưu orderId.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\": {{productId}}, \"quantity\": 2}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "const o = pm.response.json();",
+              "pm.collectionVariables.set(\"orderId\", o.id);",
+              "pm.test(\"Tong tien 500000\", () => pm.expect(o.totalPrice).to.eql(500000));",
+              "pm.test(\"Tiep nhan PENDING\", () => pm.expect(o.status).to.eql(\"PENDING\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Kiểm tra xác nhận đơn",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/orders/{{orderId}}",
+        "description": "Đợi khoảng 2 giây sau bước 04. Nếu còn PENDING, bấm Send lại đến CONFIRMED."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Da xac nhan CONFIRMED\", () => pm.expect(pm.response.json().status).to.eql(\"CONFIRMED\"));"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "setTimeout(() => {}, 2000);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Kiểm tra tồn kho sau Kafka",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "description": "Sau khi đơn CONFIRMED, stock = 8. Đây là bằng chứng cập nhật tồn kho bất đồng bộ."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Stock sau Kafka = 8\", () => pm.expect(pm.response.json().stock).to.eql(8));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Lỗi số lượng bằng không",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "description": "Dữ liệu sai phải trả 400 Bad Request.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\": {{productId}}, \"quantity\": 0}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Lỗi vượt tồn kho",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "description": "Thiếu tồn kho phải trả 409 Conflict.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\": {{productId}}, \"quantity\": 99}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Lỗi sản phẩm không tồn tại",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "description": "gRPC NOT_FOUND được chuyển thành REST 404.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\": 9223372036854775807, \"quantity\": 1}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Xem danh sách đơn",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/orders",
+        "description": "Danh sách đơn, gồm đơn demo vừa tạo."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 Cập nhật sản phẩm demo",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "description": "Chỉ chạy sau khi chụp bước 06. Giá 300000, tồn kho 20.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"San pham demo da cap nhat\", \"price\": 300000, \"stock\": 20}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Gia cap nhat 300000\", () => pm.expect(pm.response.json().price).to.eql(300000));",
+              "pm.test(\"Ton kho cap nhat 20\", () => pm.expect(pm.response.json().stock).to.eql(20));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Xóa sản phẩm demo",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "description": "Tùy chọn dọn dữ liệu sau khi chụp đủ ảnh. Body trống với HTTP 204 là đúng."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

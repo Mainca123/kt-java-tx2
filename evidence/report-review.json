@@ -1,0 +1,33 @@
+{
+  "pages": 24,
+  "visuallyReviewedPages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "originalScreenshots": 22,
+  "allOriginalImageBytesVerified": true,
+  "excludedApi03Error": true,
+  "reportSha256": "0e922e4b6f39f758e34715e67c93dfd82ab040b6f1d5c092652668a5d1c99d85"
+}

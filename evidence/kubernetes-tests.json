@@ -1,5 +1,5 @@
 {
-  "runAt": "2026-11-15T00:50:30.212837+00:00",
+  "runAt": "2026-11-15T01:29:31.319085+00:00",
   "baseUrl": "http://localhost:18081",
   "resilience": false,
   "passed": 10,
@@ -20,7 +20,7 @@
       "name": "Create product",
       "passed": true,
       "details": {
-        "id": 6,
+        "id": 13,
         "name": "E2E decimal product",
         "price": 19.95,
         "stock": 10
@@ -30,15 +30,15 @@
       "name": "gRPC lookup and exact order total",
       "passed": true,
       "details": {
-        "id": 2,
-        "productId": 6,
+        "id": 33,
+        "productId": 13,
         "productName": "E2E decimal product",
         "quantity": 3,
         "unitPrice": 19.95,
         "totalPrice": 59.85,
         "status": "PENDING",
         "reason": null,
-        "createdAt": "2026-11-15T00:50:26.933903909Z"
+        "createdAt": "2026-11-15T01:29:27.669482721Z"
       }
     },
     {
@@ -46,15 +46,15 @@
       "passed": true,
       "details": {
         "order": {
-          "id": 2,
-          "productId": 6,
+          "id": 33,
+          "productId": 13,
           "productName": "E2E decimal product",
           "quantity": 3,
           "unitPrice": 19.95,
           "totalPrice": 59.85,
           "status": "CONFIRMED",
           "reason": "Stock deducted",
-          "createdAt": "2026-11-15T00:50:26.933904Z"
+          "createdAt": "2026-11-15T01:29:27.669483Z"
         },
         "stock": 7
       }
@@ -64,7 +64,7 @@
       "passed": true,
       "details": {
         "message": "quantity: must be greater than or equal to 1",
-        "timestamp": "2026-11-15T00:50:27.599830605Z",
+        "timestamp": "2026-11-15T01:29:28.269096212Z",
         "error": "Bad Request",
         "path": "/api/orders",
         "status": 400
@@ -75,7 +75,7 @@
       "passed": true,
       "details": {
         "message": "Insufficient stock",
-        "timestamp": "2026-11-15T00:50:27.654474935Z",
+        "timestamp": "2026-11-15T01:29:28.297922961Z",
         "error": "Conflict",
         "path": "/api/orders",
         "status": 409
@@ -86,7 +86,7 @@
       "passed": true,
       "details": {
         "message": "Product not found",
-        "timestamp": "2026-11-15T00:50:27.724917694Z",
+        "timestamp": "2026-11-15T01:29:28.324113044Z",
         "error": "Not Found",
         "path": "/api/orders",
         "status": 404
@@ -96,11 +96,11 @@
       "name": "Product input validation",
       "passed": true,
       "details": {
+        "message": "price: must be greater than or equal to 0.01; name: must not be blank; stock: must be greater than or equal to 0",
+        "timestamp": "2026-11-15T01:29:28.340509300Z",
+        "error": "Bad Request",
         "path": "/api/products",
-        "status": 400,
-        "message": "name: must not be blank; stock: must be greater than or equal to 0; price: must be greater than or equal to 0.01",
-        "timestamp": "2026-11-15T00:50:27.928100028Z",
-        "error": "Bad Request"
+        "status": 400
       }
     },
     {
@@ -131,7 +131,7 @@
       "passed": true,
       "details": {
         "message": "page >= 0 and 1 <= size <= 100 required",
-        "timestamp": "2026-11-15T00:50:30.196591927Z",
+        "timestamp": "2026-11-15T01:29:31.314497673Z",
         "error": "Bad Request",
         "path": "/api/orders",
         "status": 400

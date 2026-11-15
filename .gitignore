@@ -10,4 +10,5 @@ tmp/
 postman/.dependencies/
 output/qa/
 output/*.rar
+output/*.RAR
 output/*.zip

@@ -1,0 +1,7 @@
+NAME                               READY   STATUS    RESTARTS   AGE
+api-gateway-68f7c6dd85-6ttbt       1/1     Running   0          5m10s
+kafka-b9758888d-697bv              1/1     Running   0          12m
+mysql-db-744d578bdd-qnwtn          1/1     Running   0          15m
+order-service-778b5875db-bp5lw     1/1     Running   0          5m10s
+product-service-64997fd6f9-b28xl   1/1     Running   0          2m41s
+product-service-64997fd6f9-qnlcw   1/1     Running   0          3m22s

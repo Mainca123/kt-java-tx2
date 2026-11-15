@@ -1,0 +1,10 @@
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+service/api-gateway       ClusterIP   10.96.88.84      <none>        8080/TCP            15m
+service/kafka             ClusterIP   10.103.155.127   <none>        9092/TCP,9093/TCP   15m
+service/mysql-db          ClusterIP   10.111.9.8       <none>        3306/TCP            15m
+service/order-service     ClusterIP   10.109.147.29    <none>        8082/TCP            15m
+service/product-service   ClusterIP   10.105.228.90    <none>        8081/TCP,9090/TCP   15m
+
+NAME                               STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/kafka-data   Bound    pvc-3c932654-9fbe-482d-b310-12d84cda1da1   1Gi        RWO            standard       <unset>                 15m
+persistentvolumeclaim/mysql-data   Bound    pvc-c4f93e76-b32c-457b-b381-6f33101234c1   2Gi        RWO            standard       <unset>                 15m

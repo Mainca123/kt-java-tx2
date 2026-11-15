@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "TX2 E-commerce REST gRPC Kafka",
+    "name": "HỆ THỐNG E-COMMERCE MICROSERVICES",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Runnable API contract. Run requests in order against a real stack. Creates one test product and an order; deletes the product at the end. No authentication for the local classroom demo."
   },

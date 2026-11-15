@@ -1,248 +1,203 @@
-# TX2 E-commerce Microservices
+# HỆ THỐNG E-COMMERCE MICROSERVICES
 
-Bài thực hành Java Web gồm cả Câu 1 và Câu 2. Java 17, Spring Boot 3.5.4,
-Spring Cloud Gateway 2025.0.0, MySQL 8.0, gRPC và Apache Kafka 3.9.1.
+Bài thực hành Java Web của **Giàng Seo Chính — 2023602847**. Hệ thống quản lý sản phẩm và đơn hàng bằng Spring Boot, giao tiếp đồng bộ qua gRPC và xử lý sự kiện tồn kho qua Kafka.
 
-## Cấu trúc
+## Chạy nhanh trên Windows
+
+**Chỉ cần cài Docker Desktop và để Docker Engine chạy ở chế độ Linux containers.** Java, Maven, MySQL và Kafka được chạy trong Docker.
+
+1. Tải/clone mã nguồn và giải nén toàn bộ nếu tải ZIP/RAR.
+2. Đọc [hướng dẫn cài môi trường và chạy cho người mới](HUONG_DAN_CHAY.md).
+3. Nháy đúp **`run.bat`**.
+4. Chờ dòng `READY: http://localhost:18080`; trình duyệt sẽ tự mở giao diện. Nếu cổng mặc định đang bận, dùng cổng thay thế được in sau chữ `READY`.
+
+Lần đầu cần Internet để Docker tải image và thư viện Java. Những lần sau dùng lại bộ nhớ đệm build. Bộ chạy chờ các container khỏe và kiểm tra Gateway cùng API sản phẩm/đơn hàng trước khi báo thành công.
+
+Các lệnh dưới đây chạy trong PowerShell tại thư mục chứa `run.bat`:
+
+```powershell
+.\run.bat                       # Build, khởi động toàn bộ và mở giao diện
+.\run.bat stop                  # Dừng các container của bài, giữ dữ liệu
+.\run.bat status                # Xem trạng thái và địa chỉ Gateway
+.\run.bat logs                  # Xem log gần nhất
+.\run.bat check                 # Kiểm tra Docker/Compose/cấu hình
+.\run.bat start -NoBrowser      # Khởi động nhưng không tự mở trình duyệt
+```
+
+Đóng cửa sổ hoặc trình duyệt không dừng container. Dùng `run.bat stop` để dừng. Dữ liệu MySQL và Kafka nằm trong Docker volumes, được giữ khi chạy lại.
+
+`run.bat` hoạt động ở cả hai cấu trúc: thư mục bài nộp có `code/`, hoặc thư mục repository có `pom.xml` ngay cạnh `run.bat`. Các lệnh phát triển bên dưới chạy tại thư mục chứa `pom.xml` — nếu đang ở thư mục bài nộp thì vào `code/` trước.
+
+## Kiến trúc
 
 ```text
-tx2/
-├── TX2.pdf
-├── baocao.docx
-└── code/                     ← chạy các lệnh bên dưới tại đây
-    ├── pom.xml               Maven multi-module
-    ├── proto/                Contract gRPC dùng chung
-    ├── common/               Event DTO, xử lý lỗi, transactional outbox
-    ├── api-gateway/          Cổng API và giao diện đặt hàng
-    ├── product-service/      REST, gRPC server, Kafka consumer, product_db
-    ├── order-service/        REST, gRPC client, Kafka producer, order_db
-    ├── database/             SQL khởi tạo và bản sao dữ liệu khi nghiệm thu
-    ├── postman/              Collection và môi trường để import vào Postman
-    ├── k8s/                  Manifest đầy đủ cho namespace tx2-ecommerce
-    ├── scripts/              Build, triển khai, test, tạo báo cáo
-    ├── evidence/             Kết quả kiểm thử thực tế
-    └── .gitlab-ci.yml        Build → push image → rolling deployment
+Trình duyệt / Postman
+        |
+    API Gateway ---- REST ----> Product Service ----> product_db (MySQL)
+        |                            ^
+        |                            | gRPC: kiểm tra sản phẩm
+        +----------- REST ----> Order Service ------> order_db (MySQL)
+                                     |
+                           Kafka: order-events
+                                     |
+                              Product Service
+                                     |
+                          Kafka: inventory-results
+                                     |
+                               Order Service
 ```
 
-## Chạy bằng Docker Compose
+- Product Service cung cấp CRUD sản phẩm, gRPC server và consumer cập nhật tồn kho.
+- Order Service gọi gRPC để kiểm tra sản phẩm, lưu đơn hàng và phát sự kiện qua transactional outbox. Khi Kafka tạm ngừng, sự kiện được giữ trong database để gửi lại.
+- Đơn hàng chuyển từ `PENDING` sang `CONFIRMED` hoặc `REJECTED` sau khi nhận kết quả xử lý tồn kho.
+- Cập nhật tồn kho có điều kiện và ghi nhận sự kiện đã xử lý giúp tránh bán vượt số lượng, tránh trừ kho lặp khi Kafka giao lại sự kiện.
+- Gateway định tuyến API, phục vụ giao diện và chỉ retry các yêu cầu đọc được cấu hình; không tự retry thao tác tạo đơn.
 
-Cần JDK 17, Maven và Docker Desktop đang chạy Linux containers. Không cần
-dùng tài khoản MySQL đã cài trên Windows vì bài chạy MySQL riêng trong Docker.
+| Công nghệ | Phiên bản/công dụng |
+| --- | --- |
+| Java | 17 |
+| Spring Boot | 3.5.4 |
+| Spring Cloud | 2025.0.0, API Gateway |
+| MySQL | 8.0, hai database độc lập theo dịch vụ |
+| Apache Kafka | 3.9.1, KRaft |
+| gRPC / Protobuf | Contract chung trong `proto/` |
+| Docker Compose | Chạy toàn bộ hệ thống cục bộ |
+| Kubernetes / Minikube | Manifest triển khai, health probes, rolling update |
+| GitLab CI/CD | Cấu hình build, kiểm thử, push image và triển khai |
 
-```powershell
-cd code
-powershell -ExecutionPolicy Bypass -File scripts/start.ps1
+## Cấu trúc repository
+
+```text
+.
+|-- run.bat                    Bộ chạy Windows
+|-- HUONG_DAN_CHAY.md           Hướng dẫn dành cho người mới
+|-- pom.xml                    Maven multi-module
+|-- proto/                     Contract gRPC
+|-- common/                    Event DTO, xử lý lỗi, transactional outbox
+|-- product-service/           REST + gRPC server + Kafka consumer
+|-- order-service/             REST + gRPC client + xử lý đơn hàng
+|-- api-gateway/               Gateway và giao diện web
+|-- database/                  SQL khởi tạo database
+|-- compose.run.yml            Chạy bằng Docker, build từ source
+|-- Dockerfile.source          Maven builder + Java runtime
+|-- docker-compose.yml         Chế độ phát triển, mở thêm cổng dịch vụ
+|-- Dockerfile                 Runtime dùng JAR đã build, phục vụ CI/dev
+|-- postman/                   Collection và environment
+|-- k8s/                       Manifest Kubernetes
+|-- scripts/                   Bộ chạy, build, kiểm thử, triển khai
+|-- evidence/                  Kết quả kiểm thử đã lưu
+`-- .gitlab-ci.yml             Pipeline GitLab
 ```
 
-Mở **http://localhost:18080** để chọn sản phẩm, nhập số lượng và đặt hàng.
-Gateway API: **http://localhost:18080/api/products**.
+`logs/`, các thư mục `target/`, file `.env` cục bộ và cache không đưa lên Git. Báo cáo Word, đề bài và ảnh gốc được quản lý ngoài repository mã nguồn trong bản bài nộp.
 
-Cách chạy thủ công tương đương:
+## Cấu hình chạy bằng run.bat
+
+`scripts/run.ps1` dùng `compose.run.yml` và `Dockerfile.source` để build ngay trong Docker. Chế độ này chỉ công bố Gateway trên `127.0.0.1`, cổng mặc định `18080`; MySQL, Kafka, REST/gRPC nội bộ dùng mạng Docker.
+
+Không cần tạo `.env` để chạy với cấu hình demo. Nếu muốn tùy chỉnh, sao chép `.env.example` thành `.env`. `GATEWAY_PORT` đổi cổng web; nếu cổng bận, bộ chạy chọn cổng trống trong khoảng 18080–18100 và in địa chỉ thực tế. Nếu đã có dữ liệu, giữ mật khẩu database khớp lần khởi tạo trước.
+
+Hai file Compose cùng dùng project `tx2-ecommerce` và các volumes của bài. Chọn một chế độ tại một thời điểm; chuyển chế độ bằng cách dừng cấu hình đang chạy trước. Cổng MySQL/Kafka trong `.env.example` chỉ áp dụng cho chế độ phát triển bên dưới.
+
+Log bộ chạy nằm ở `logs/launcher-...log`. File `logs/launcher-state.json` lưu địa chỉ lần khởi động thành công gần nhất. Đây là cấu hình demo cục bộ; cần cấu hình bảo mật riêng trước khi triển khai ra Internet.
+
+## API và Postman
+
+Địa chỉ mặc định khi dùng `run.bat`: `http://localhost:18080`. Nếu bộ chạy chọn cổng khác, thay `baseUrl` trong Postman cho đúng.
+
+| Method | Đường dẫn | Chức năng |
+| --- | --- | --- |
+| GET | `/api/products` | Danh sách sản phẩm |
+| GET | `/api/products/{id}` | Chi tiết sản phẩm |
+| POST | `/api/products` | Thêm sản phẩm |
+| PUT | `/api/products/{id}` | Cập nhật sản phẩm |
+| DELETE | `/api/products/{id}` | Xóa sản phẩm |
+| POST | `/api/orders` | Tạo đơn hàng |
+| GET | `/api/orders` | Danh sách đơn hàng |
+| GET | `/api/orders/{id}` | Chi tiết và trạng thái đơn |
+| GET | `/actuator/health` | Sức khỏe Gateway |
+
+Các API danh sách nhận `page` và `size`, với `size` tối đa 100. Sản phẩm nhận `name`, `price`, `stock`; đơn hàng nhận `productId`, `quantity`. Ví dụ tạo đơn:
+
+```json
+{
+  "productId": 1,
+  "quantity": 1
+}
+```
+
+Thay `productId` bằng ID tồn tại và chọn số lượng phù hợp. API tạo đơn có thể trả `201` với trạng thái `PENDING`; đọc lại đơn sau khi Kafka xử lý để xem kết quả cuối.
+
+Trong Postman, import [collection kiểm thử](postman/tx2.postman_collection.json) và [environment Compose](postman/local.postman_environment.json), chọn environment rồi kiểm tra biến `baseUrl`. Collection chụp ảnh riêng nằm ở [chup-anh.postman_collection.json](postman/chup-anh.postman_collection.json); kiểm tra `baseUrl` trước khi chạy vì ảnh báo cáo dùng bản Minikube cổng 18081.
+
+## Phát triển và kiểm thử bằng JDK/Maven
+
+Phần này cần **JDK 17**, **Maven 3.9.x** và Docker Desktop. Không bắt buộc khi chỉ dùng `run.bat`.
 
 ```powershell
+java -version
+mvn -version
 mvn -B clean verify -ntp
-docker compose up -d --build --wait --wait-timeout 300
-docker compose ps
-docker compose logs --tail 100 product-service order-service
 ```
 
-| Thành phần | Địa chỉ trên máy | Địa chỉ nội bộ Docker |
-|---|---|---|
-| Gateway | localhost:18080 | api-gateway:8080 |
-| Product REST | localhost:8081 | product-service:8081 |
-| Product gRPC | localhost:9090 | product-service:9090 |
-| Order REST | localhost:8082 | order-service:8082 |
-| MySQL | localhost:3310 | mysql-db:3306 |
-| Kafka | localhost:29092 | kafka:9092 |
-
-Các cổng công bố chỉ bind vào `127.0.0.1`. Có thể sao chép `.env.example` thành
-`.env` để đổi cổng Gateway, MySQL, Kafka và mật khẩu demo. Nếu đổi cổng Gateway,
-đổi `baseUrl` trong Postman và tham số `--base-url` của script kiểm thử tương ứng.
-Không sửa riêng mật khẩu `.env` sau khi đã tạo volume MySQL; tài khoản trong
-database cần được đổi tương ứng.
-
-Tắt ứng dụng, giữ dữ liệu:
+Để chạy chế độ phát triển bằng JAR build trên máy:
 
 ```powershell
-docker compose stop
+docker compose -f compose.run.yml stop
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start.ps1
 ```
 
-## Kiến trúc và luồng dữ liệu
+`docker-compose.yml` mở thêm các cổng cục bộ để kết nối công cụ phát triển:
 
-```mermaid
-flowchart LR
-    U[Browser hoặc Postman] -->|REST| G[API Gateway]
-    G -->|REST| P[Product Service]
-    G -->|REST| O[Order Service]
-    O -->|gRPC GetProductById| P
-    P --> PD[(product_db)]
-    O --> OD[(order_db)]
-    OD -->|Outbox publisher| K[Kafka order-events]
-    K -->|Consumer trừ tồn kho| P
-    PD -->|Outbox publisher| R[Kafka stock-results]
-    R -->|Xác nhận kết quả| O
-```
+| Thành phần | Cổng mặc định trên máy |
+| --- | --- |
+| Gateway | 18080 |
+| Product REST / gRPC | 8081 / 9090 |
+| Order REST | 8082 |
+| MySQL | 3310 |
+| Kafka | 29092 |
 
-1. Order gọi gRPC để lấy thông tin sản phẩm, giá và tồn kho. Sản phẩm không tồn tại
-   trả HTTP 404; thiếu tồn kho trả 409; Product không kết nối được trả 503 sau deadline 3 giây.
-2. Order lưu đơn `PENDING` và `OrderCreatedEvent` vào outbox trong **cùng transaction MySQL**.
-   HTTP 201 thể hiện đơn đã được tiếp nhận; chưa có nghĩa đã giữ được hàng.
-3. Publisher gửi outbox đến Kafka. Kafka ngừng hoạt động thì bản ghi được giữ lại
-   và gửi lại khi broker phục hồi. Không dùng thao tác ghi kép DB rồi gửi event ngoài transaction.
-4. Product khóa dòng sản phẩm, kiểm tra lại tồn kho và trừ kho trong transaction.
-   `processed_orders` lưu mã đơn đã xử lý để việc phát lại event không trừ kho lần hai.
-   Event cùng sản phẩm dùng cùng Kafka key; row lock vẫn bảo vệ khi có nhiều replica.
-5. Product lưu kết quả vào outbox. Order nhận `stock-results` và chuyển sang
-   `CONFIRMED` hoặc `REJECTED`. Khi nhiều đơn tranh sản phẩm cuối, số lượng xác nhận
-   không vượt tồn kho; đơn chưa được cấp hàng sẽ bị từ chối bất đồng bộ.
+Kiểm tra các cổng này không bị ứng dụng khác chiếm trước khi dùng chế độ phát triển. Để quay lại bộ chạy đơn giản, chạy `docker compose stop` rồi `run.bat`.
 
-Giá dùng `BigDecimal` và cột `DECIMAL`. Proto giữ trường `double price` theo đề,
-đồng thời truyền `price_decimal` để Order tính tổng tiền chính xác.
-Kafka chạy **KRaft**, không cần ZooKeeper. Đây là cách triển khai broker khác ví dụ
-ZooKeeper trong đề, vẫn thực hiện đúng producer, consumer và topic yêu cầu.
-
-## API
-
-Collection Postman là bộ hợp đồng request có assertion chạy được. API demo không
-cấu hình đăng nhập. Sản phẩm mẫu được tạo với ID 1, 2, 3 khi Product khởi động.
-
-| Method | Đường dẫn | Kết quả |
-|---|---|---|
-| GET | `/api/products?page=0&size=50` | Danh sách sản phẩm, tối đa 100 bản ghi/trang |
-| GET | `/api/products/{id}` | Sản phẩm hoặc 404 |
-| POST | `/api/products` | Tạo sản phẩm, 201 |
-| PUT | `/api/products/{id}` | Sửa sản phẩm |
-| DELETE | `/api/products/{id}` | Xóa sản phẩm, 204 |
-| POST | `/api/orders` | Tiếp nhận đơn, 201 và trạng thái PENDING |
-| GET | `/api/orders?page=0&size=50` | Danh sách đơn mới nhất |
-| GET | `/api/orders/{id}` | Trạng thái xử lý đơn |
-| GET | `/actuator/health` | Sức khỏe của service đang truy cập |
-
-Tạo sản phẩm:
-
-```json
-{"name":"Ban phim co","price":850000.00,"stock":20}
-```
-
-Tạo đơn:
-
-```json
-{"productId":1,"quantity":2}
-```
-
-Giới hạn đầu vào: tên 1–150 ký tự không chỉ chứa khoảng trắng; giá > 0, tối đa
-10 chữ số nguyên và 2 chữ số thập phân; tồn kho ≥ 0; số lượng đặt 1–10000.
-
-## Kiểm thử
+Nếu đã cài Python 3, có thể chạy kiểm thử API tích hợp sau khi hệ thống sẵn sàng:
 
 ```powershell
-mvn -B verify -ntp
-postman collection run postman/tx2.postman_collection.json --no-report-events
-python scripts/verify-system.py
+python scripts/verify-system.py --base-url http://localhost:18080 --output logs/system-tests.json
 ```
 
-Import `postman/tx2.postman_collection.json` và `postman/local.postman_environment.json`
-vào ứng dụng Postman nếu muốn chạy giao diện. Chạy collection theo thứ tự để truyền
-`productId`, `orderId` giữa các request. Collection tạo sản phẩm riêng, tạo một đơn,
-đợi Kafka xác nhận, kiểm tra tồn kho rồi xóa sản phẩm thử. Đơn thử vẫn được lưu.
-Postman CLI chạy local không cần tài khoản; tùy chọn xuất `--output` của CLI hiện
-yêu cầu đăng nhập, nên bằng chứng local được lưu bằng log terminal.
-
-Kiểm tra thực tế Kafka mất kết nối, gửi lại event và Product ngừng hoạt động:
-
-```powershell
-python scripts/verify-system.py --resilience
-```
-
-Lệnh này **tạm dừng rồi khởi động lại Kafka và Product của riêng Compose project
-`tx2-ecommerce`**. Không chạy trong lúc demo hoặc chạy collection khác.
-Kết quả lưu ở `evidence/system-tests.json`; không dùng mock để thay cho Kafka/MySQL/gRPC.
-Các test Java dùng H2 và mock gRPC client để kiểm tra transaction, tiền, idempotency;
-bằng chứng tích hợp các dịch vụ thật nằm trong script và Postman.
+Script tạo sản phẩm/đơn hàng thử nghiệm và kiểm tra nghiệp vụ, gồm tình huống đặt hàng đồng thời. Tùy chọn `--resilience` còn tạm dừng Kafka/Product Service, chỉ dùng trên stack phát triển cục bộ với `docker-compose.yml` khi chủ động kiểm thử phục hồi. Kết quả kiểm thử cũ trong `evidence/` là minh chứng tại lần chạy đã ghi, không thay thế kết quả trên máy mới.
 
 ## Triển khai Minikube
 
+Phần này cần thêm Minikube. Nên dừng stack Compose để dành RAM trước khi triển khai; Minikube dùng database và Kafka riêng.
+
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/deploy-minikube.ps1
-minikube kubectl -- -n tx2-ecommerce get pods,services,pvc
+.\run.bat stop
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-minikube.ps1
+minikube kubectl -- -n tx2-ecommerce get pods,services
 minikube kubectl -- -n tx2-ecommerce port-forward service/api-gateway 18081:8080
 ```
 
-Giữ cửa sổ port-forward mở, truy cập **http://localhost:18081**.
-Hoặc chạy `powershell -File scripts/open-minikube.ps1` để tạo port-forward nền và
-lưu PID cùng log trong `logs/`.
-Compose và Kubernetes có dữ liệu riêng. Product chạy 2 replica; `maxSurge: 1`,
-`maxUnavailable: 0`, startup/readiness/liveness probes và graceful shutdown giúp
-rolling update giữ pod sẵn sàng phục vụ. MySQL và Kafka dùng PVC; bản demo chỉ có
-một node database và broker, nên không tuyên bố HA cho hai thành phần này.
+Giữ terminal port-forward mở và truy cập `http://localhost:18081`. Có thể dùng `scripts/open-minikube.ps1` thay cho lệnh port-forward để chạy nền. Namespace của bài là `tx2-ecommerce`.
 
-Pod có preStop 10 giây để cập nhật endpoint trước khi tắt tiến trình. Gateway thử
-lại tối đa 2 lần cho GET khi upstream gặp lỗi tạm thời; không tự thử lại POST tạo đơn.
+## CI/CD
 
-Dùng `minikube kubectl --` để lấy đúng phiên bản client của cluster; kubectl cài
-trên máy hiện cũ hơn cluster. Các manifest chỉ tác động namespace `tx2-ecommerce`.
-Không chạy `minikube delete` vì máy có thể đang dùng cluster cho bài khác.
+[.gitlab-ci.yml](.gitlab-ci.yml) định nghĩa ba giai đoạn: Maven build/test → build và push ba image → triển khai Minikube. Job triển khai cần GitLab Runner Windows có tag `minikube-windows`, quyền truy cập Docker/Minikube và registry theo cấu hình trong pipeline.
 
-## GitLab CI/CD
+GitHub hiển thị mã nguồn/README nhưng không tự chạy file GitLab CI. Pipeline trên GitLab cần repository, runner và quyền truy cập tương ứng được thiết lập; không coi việc có file cấu hình là bằng chứng pipeline đã chạy thành công.
 
-Pipeline đã có 3 stage: Maven verify và JUnit report, build/push 3 Docker image gắn
-commit SHA, deploy bằng Windows shell runner có quyền truy cập Minikube.
+## Đưa thay đổi lên Git
 
-Để pipeline chạy trên GitLab của bạn:
-
-1. Tạo repository GitLab và đẩy **nội dung thư mục `code`** lên root repository.
-2. Bật Container Registry và dùng runner Linux Docker privileged cho hai stage
-   `build`, `images` (hoặc shared runner hỗ trợ Docker-in-Docker).
-3. Đăng ký runner Windows bằng shell executor, tag **`minikube-windows`**. Chạy runner
-   dưới đúng tài khoản Windows sở hữu Docker/Minikube. Runner phải nhận job có tag
-   này; không dùng tài khoản LocalSystem không có kubeconfig người dùng.
-4. Tạo deploy token `read_registry`; lưu `REGISTRY_PULL_USER` và
-   `REGISTRY_PULL_PASSWORD` dưới dạng CI/CD variables masked. Dùng token lâu dài
-   vì `CI_JOB_TOKEN` hết hạn sau job và không phù hợp cho pod pull image về sau.
-5. Push vào default branch để pipeline tự build, push image và apply manifest.
-   `scripts/ci-deploy.ps1` thay image tag bằng `CI_COMMIT_SHA`, thêm imagePullSecret
-   và chờ `rollout status` cho cả 3 service.
-
-Repo, URL GitLab và token chưa được cung cấp nên không thể khẳng định pipeline
-remote đã chạy. Phần build, chạy Compose và triển khai/rolling update local có
-bằng chứng riêng trong `evidence`.
-
-## Cơ sở dữ liệu và báo cáo
-
-`database/init.sql` tạo `product_db`, `order_db` và cấp quyền cho tài khoản demo.
-Hibernate tạo bảng khi service khởi động. `database/backup.sql` chứa cấu trúc và dữ
-liệu thực tế được xuất sau nghiệm thu; dùng để nộp bài hoặc khôi phục vào MySQL
-thử nghiệm. Bản backup có `DROP TABLE`; việc import sẽ thay các bảng cùng tên,
-vì vậy chỉ khôi phục vào môi trường dành riêng cho bài này.
-
-`../baocao.docx` trình bày kiến trúc, các bước chạy và kết quả kiểm thử đã quan sát.
-Cần điền họ tên, mã sinh viên và lớp trước khi nộp.
-
-Tạo gói RAR theo tên yêu cầu khi đã điền báo cáo:
+Repository của bản bài nộp nằm trong **`code/`**. Khi mở PowerShell ở ngoài `code/`, vào thư mục này trước; khi đã ở bản clone có `pom.xml` ngay tại gốc thì không chạy thêm `cd code`.
 
 ```powershell
-python scripts/package-submission.py --name NGUYENVANA --student-id 123456
+git status
+git add README.md HUONG_DAN_CHAY.md run.bat scripts/run.ps1 Dockerfile.source compose.run.yml .gitattributes
+git diff --cached --stat
+git commit -m "Add one-click Docker launcher and setup guide"
+git push
 ```
 
-Gói nằm trong `output/`, gồm đề, báo cáo và source; không đóng gói target, cache
-hoặc mật khẩu `.env` của máy. Cần WinRAR tại vị trí mặc định trên Windows.
+Lệnh `git add` trên chỉ chọn bộ chạy và tài liệu mới. Nếu muốn đưa cả các thay đổi giao diện/báo cáo kiểm thử trước đó lên Git, xem `git status` và chọn thêm các file tương ứng.
 
-## Giới hạn của bản thực hành
-
-- Chưa có xác thực, phân quyền, thanh toán hoặc gửi email vì đề không yêu cầu.
-- Mật khẩu mặc định chỉ dùng cho môi trường học tập. Không công bố dịch vụ demo
-  ra Internet với cấu hình hiện tại.
-- Outbox được gửi ít nhất một lần; consumer khử trùng theo orderId. HTTP tạo đơn
-  chưa có Idempotency-Key: người dùng gửi lại POST có thể tạo đơn mới.
-- `ddl-auto=update` phục vụ bài thực hành; triển khai sản xuất cần migration có phiên bản.
-- Các script `generate-*.py` và `scaffold.py` là công cụ tạo cấu hình ban đầu;
-  không chạy `scaffold.py` sau khi đã tùy chỉnh vì sẽ ghi đè cấu hình service.
-
-## Tài liệu kỹ thuật đối chiếu
-
-- [Spring Cloud và bảng tương thích Spring Boot](https://spring.io/projects/spring-cloud/)
-- [gRPC Spring Boot starter](https://grpc-ecosystem.github.io/grpc-spring/)
-- [Apache Kafka Docker](https://kafka.apache.org/39/getting-started/docker/)
-- [Gateway Retry cho request GET](https://docs.spring.io/spring-cloud-gateway/reference/4.3/spring-cloud-gateway-server-webflux/gatewayfilter-factories/retry-factory.html)
-#   k t - j a v a - t x 2  
- 
+README được lưu UTF-8, Markdown chuẩn và dùng liên kết tương đối. Không dùng `Out-File`/`>>` mặc định của Windows PowerShell 5.1 để nối nội dung vào README vì có thể trộn UTF-16 với UTF-8. Nên sửa bằng trình soạn thảo và chọn **UTF-8** khi lưu. File `.gitattributes` quy định xuống dòng phù hợp cho Markdown, PowerShell và batch.

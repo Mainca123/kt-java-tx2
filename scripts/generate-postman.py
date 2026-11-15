@@ -37,7 +37,7 @@ request('12 List orders','GET','/api/orders',tests='pm.test("Order persisted",()
 request('13 Delete test product','DELETE','/api/products/{{productId}}',status=204)
 request('14 Deleted product returns 404','GET','/api/products/{{productId}}',status=404)
 request('15 Reject invalid pagination','GET','/api/products?size=1000',status=400)
-collection={'info':{'name':'TX2 E-commerce REST gRPC Kafka','schema':'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
+collection={'info':{'name':'HỆ THỐNG E-COMMERCE MICROSERVICES','schema':'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
     'description':'Runnable API contract. Run requests in order against a real stack. Creates one test product and an order; deletes the product at the end. No authentication for the local classroom demo.'},
     'variable':[{'key':'baseUrl','value':'http://localhost:18080'}], 'item':items}
 target=root/'postman'; target.mkdir(exist_ok=True)

@@ -1,0 +1,184 @@
+{
+  "report": "baocao.docx",
+  "student": {
+    "name": "Giàng Seo Chính",
+    "id": "2023602847"
+  },
+  "included": [
+    {
+      "figure": 1,
+      "key": "2",
+      "filename": "2.png",
+      "caption": "Maven hoàn tất build toàn bộ module",
+      "sha256": "5caf77b6dbc40c17d4ec462ed70b5abbb8b46a91dc7938c5a98b1a36083847dd"
+    },
+    {
+      "figure": 2,
+      "key": "3",
+      "filename": "3.png",
+      "caption": "Minikube đang chạy cùng các Deployment Service và PVC",
+      "sha256": "ef7f2615f411b76649a507df9e6f3175bb32e8e9f521cb2033d4a936c8b5dfc1"
+    },
+    {
+      "figure": 3,
+      "key": "4",
+      "filename": "4.png",
+      "caption": "Gateway phản hồi trạng thái UP qua địa chỉ localhost",
+      "sha256": "3ec6412ac89e95ef7f85079c8ca8834471e4e00a8b2be690a75faae5266e61df"
+    },
+    {
+      "figure": 4,
+      "key": "6",
+      "filename": "6.png",
+      "caption": "Script tích hợp ghi nhận 10 checks passed",
+      "sha256": "8dc04e93270ac7c62891cb7ae2c988f0c5d50009f73382b9fce9a6d9b451b04d"
+    },
+    {
+      "figure": 5,
+      "key": "5",
+      "filename": "5.png",
+      "caption": "Postman CLI hoàn tất 15 request và 24 assertion không lỗi",
+      "sha256": "eebd05c13babf4fd5ff85279f617ec90abbf38358644ce6436b77c15fb722308"
+    },
+    {
+      "figure": 6,
+      "key": "7",
+      "filename": "7.png",
+      "caption": "Log Product ghi nhận cả đơn được cấp hàng và đơn bị từ chối",
+      "sha256": "3427fd98425568da552c91be2712ed9d1e4661f406936ec3612d1dd4bd157272"
+    },
+    {
+      "figure": 7,
+      "key": "8",
+      "filename": "8.png",
+      "caption": "Rolling update Product hoàn tất với 281 request không lỗi",
+      "sha256": "8fff5a08269e5a3358b9e418ae7eda820ffda657b22b943c88f8191c4dcf2fe5"
+    },
+    {
+      "figure": 8,
+      "key": "products",
+      "filename": "sản phẩm.png",
+      "caption": "Giao diện sản phẩm và thao tác chọn số lượng đặt hàng",
+      "sha256": "20151f406db134bd6e256e7cc6ed432e380374144c70e7019f6d03cac90a5d86"
+    },
+    {
+      "figure": 9,
+      "key": "orders",
+      "filename": "đơn hàng.png",
+      "caption": "Bảng đơn hàng hiển thị kết quả xác nhận và từ chối cấp hàng",
+      "sha256": "38e42fc3acc46b31558d9372fab708862b70ca5591fd6b0f0ba7dd3c8834ef42"
+    },
+    {
+      "figure": 10,
+      "key": "J13",
+      "filename": "1794707539177_2062728994940213179_1596034034102983485_2d4ed7ef01559efea422e150ae2a18d6.jpg",
+      "caption": "Collection sử dụng baseUrl productId và orderId",
+      "sha256": "b79df8656e808853502316b2ea68ccf03838f83901fb1315ea7cc5adfa729c4c"
+    },
+    {
+      "figure": 11,
+      "key": "J01",
+      "filename": "1794707128273_2062728994940213179_1596034034102983485_5fe4651108528814d4d266182af31a83.jpg",
+      "caption": "GET danh sách sản phẩm trả 200 OK",
+      "sha256": "9b239a09091ce4dcd4e972f8860bc6d16194ec84d5f595fb02654089c625e027"
+    },
+    {
+      "figure": 12,
+      "key": "J02",
+      "filename": "1794707157554_2062728994940213179_1596034034102983485_17ff7ac920c24739774fd246b8937753.jpg",
+      "caption": "POST sản phẩm trả 201 Created với ID 15",
+      "sha256": "4eaf2e5f22b0b4c15c1f18356adfbd6dcb3d30ea480434c76e88583c2ae5c111"
+    },
+    {
+      "figure": 13,
+      "key": "J14",
+      "filename": "1794707760081_2062728994940213179_1596034034102983485_b894547fa17cfad58ba743b8ea244b7e.jpg",
+      "caption": "GET chi tiết sản phẩm thành công với ID 16",
+      "sha256": "eb2854e59357f44c104ff8bb688d46c26101e3bf72c42ce28e81d4ac2aaa0ec4"
+    },
+    {
+      "figure": 14,
+      "key": "J04",
+      "filename": "1794707294145_2062728994940213179_1596034034102983485_16f877e5e480486cddb83ee11b0b643e.jpg",
+      "caption": "POST đơn hàng trả 201 Created và trạng thái PENDING",
+      "sha256": "ba2756c8e50ff0984c27f9045709b162a0123b5732781392fe92277c029221c5"
+    },
+    {
+      "figure": 15,
+      "key": "J05",
+      "filename": "1794707313212_2062728994940213179_1596034034102983485_40e5894e2004782d2f133d4701587c61.jpg",
+      "caption": "Đơn ID 46 chuyển từ PENDING sang CONFIRMED",
+      "sha256": "65cfb0f89086b918101a20218536025fc8f76ba5eefbee7291af6af466b6b3b1"
+    },
+    {
+      "figure": 16,
+      "key": "J06",
+      "filename": "1794707333047_2062728994940213179_1596034034102983485_c1efd7a53f87cff0ad4351a492d13617.jpg",
+      "caption": "Sản phẩm ID 15 còn 8 đơn vị sau đơn hàng mua 2",
+      "sha256": "4d7493f2828ef4a8e98291a773adc69448be3bff1630a67ee342782b1051bb8b"
+    },
+    {
+      "figure": 17,
+      "key": "J07",
+      "filename": "1794707363583_2062728994940213179_1596034034102983485_efd5b4ae85c47bcf5d30df894e2b9f51.jpg",
+      "caption": "Số lượng bằng 0 bị từ chối với HTTP 400",
+      "sha256": "d3662fb32d6f14f698aeeb80d62fc417e58a7d84226dbbbc33e75993052b4c9f"
+    },
+    {
+      "figure": 18,
+      "key": "J08",
+      "filename": "1794707383989_2062728994940213179_1596034034102983485_75580b5d306ac64ae779444ac4d1096f.jpg",
+      "caption": "Yêu cầu mua vượt tồn kho trả HTTP 409",
+      "sha256": "8b7239be4cdff3ef07404da26dff1ab158713e40d73c1df37d12db1f7c47d135"
+    },
+    {
+      "figure": 19,
+      "key": "J09",
+      "filename": "1794707402360_2062728994940213179_1596034034102983485_85f39b756c68a10812aa92420fdb3d15.jpg",
+      "caption": "Tra cứu sản phẩm không tồn tại khi đặt đơn trả HTTP 404",
+      "sha256": "5341fbf4cc4c370e95e187155acd083a03c81eadf4722faa59a75ad595bf8d29"
+    },
+    {
+      "figure": 20,
+      "key": "J10",
+      "filename": "1794707422540_2062728994940213179_1596034034102983485_0013c0ac51337ee801962fb23bafaffa.jpg",
+      "caption": "Danh sách đơn trả HTTP 200 và chứa đơn ID 46",
+      "sha256": "7fbcfc9c2d2c739a46e6f79c371faa2aed7e0abfe3892444c3962685563f3ed4"
+    },
+    {
+      "figure": 21,
+      "key": "J11",
+      "filename": "1794707444889_2062728994940213179_1596034034102983485_f3168393119539c508756e420b957bcb.jpg",
+      "caption": "PUT sản phẩm ID 15 cập nhật giá và tồn kho thành công",
+      "sha256": "15b8f03d3c1820ad52b0c19d7869474780883f63a9573f3e866c9c4990b1da73"
+    },
+    {
+      "figure": 22,
+      "key": "J12",
+      "filename": "1794707477393_2062728994940213179_1596034034102983485_0442b76b6dd7344d8658e7361f54b43a.jpg",
+      "caption": "DELETE sản phẩm demo trả HTTP 204 No Content",
+      "sha256": "8481f0a10330bc0c10a6d586977f393e24249d3705396bfe6af8d912a96271ea"
+    }
+  ],
+  "excluded": [
+    {
+      "key": "J03",
+      "filename": "1794707261954_2062728994940213179_1596034034102983485_34cbdb24f11119ef04de2b44ab694e58.jpg",
+      "reason": "Ảnh API 03 trả 405, loại khỏi báo cáo theo yêu cầu."
+    }
+  ],
+  "facts": {
+    "postmanRequests": 15,
+    "postmanAssertions": 24,
+    "postmanFailedAssertions": 0,
+    "integrationPassed": 10,
+    "integrationTotal": 10,
+    "rollingRequests": 281,
+    "rollingFailed": 0,
+    "productId": 15,
+    "orderId": 46,
+    "initialStock": 10,
+    "finalStock": 8,
+    "independentLookupProductId": 16
+  }
+}
