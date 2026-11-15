@@ -1,0 +1,13 @@
+**/target/
+.idea/
+.vscode/
+*.iml
+.env
+logs/
+/*.log
+tmp/
+.postman/
+postman/.dependencies/
+output/qa/
+output/*.rar
+output/*.zip

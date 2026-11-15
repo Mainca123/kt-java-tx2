@@ -1,0 +1,51 @@
+stages:
+  - build
+  - image
+  - deploy
+
+build:
+  stage: build
+  image: maven:3.9.9-eclipse-temurin-17
+  script:
+    - mvn -B clean verify -ntp
+  artifacts:
+    paths:
+      - product-service/target/product-service-1.0.0.jar
+      - order-service/target/order-service-1.0.0.jar
+      - api-gateway/target/api-gateway-1.0.0.jar
+    reports:
+      junit:
+        - product-service/target/surefire-reports/TEST-*.xml
+        - order-service/target/surefire-reports/TEST-*.xml
+
+images:
+  stage: image
+  image: docker:27-cli
+  services:
+    - name: docker:27-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - |
+      for service in product-service order-service api-gateway; do
+        docker build --build-arg SERVICE="$service" -t "$CI_REGISTRY_IMAGE/$service:$CI_COMMIT_SHA" .
+        docker push "$CI_REGISTRY_IMAGE/$service:$CI_COMMIT_SHA"
+      done
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+deploy:
+  stage: deploy
+  tags:
+    - minikube-windows
+  resource_group: tx2-minikube
+  environment:
+    name: minikube
+  script:
+    - powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ci-deploy.ps1
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

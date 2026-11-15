@@ -1,0 +1,141 @@
+{
+  "runAt": "2026-11-15T00:50:30.212837+00:00",
+  "baseUrl": "http://localhost:18081",
+  "resilience": false,
+  "passed": 10,
+  "total": 10,
+  "results": [
+    {
+      "name": "Gateway health",
+      "passed": true,
+      "details": {
+        "status": "UP",
+        "groups": [
+          "liveness",
+          "readiness"
+        ]
+      }
+    },
+    {
+      "name": "Create product",
+      "passed": true,
+      "details": {
+        "id": 6,
+        "name": "E2E decimal product",
+        "price": 19.95,
+        "stock": 10
+      }
+    },
+    {
+      "name": "gRPC lookup and exact order total",
+      "passed": true,
+      "details": {
+        "id": 2,
+        "productId": 6,
+        "productName": "E2E decimal product",
+        "quantity": 3,
+        "unitPrice": 19.95,
+        "totalPrice": 59.85,
+        "status": "PENDING",
+        "reason": null,
+        "createdAt": "2026-11-15T00:50:26.933903909Z"
+      }
+    },
+    {
+      "name": "Kafka confirms order and deducts stock",
+      "passed": true,
+      "details": {
+        "order": {
+          "id": 2,
+          "productId": 6,
+          "productName": "E2E decimal product",
+          "quantity": 3,
+          "unitPrice": 19.95,
+          "totalPrice": 59.85,
+          "status": "CONFIRMED",
+          "reason": "Stock deducted",
+          "createdAt": "2026-11-15T00:50:26.933904Z"
+        },
+        "stock": 7
+      }
+    },
+    {
+      "name": "Reject quantity zero",
+      "passed": true,
+      "details": {
+        "message": "quantity: must be greater than or equal to 1",
+        "timestamp": "2026-11-15T00:50:27.599830605Z",
+        "error": "Bad Request",
+        "path": "/api/orders",
+        "status": 400
+      }
+    },
+    {
+      "name": "Reject insufficient stock",
+      "passed": true,
+      "details": {
+        "message": "Insufficient stock",
+        "timestamp": "2026-11-15T00:50:27.654474935Z",
+        "error": "Conflict",
+        "path": "/api/orders",
+        "status": 409
+      }
+    },
+    {
+      "name": "gRPC missing product maps to REST 404",
+      "passed": true,
+      "details": {
+        "message": "Product not found",
+        "timestamp": "2026-11-15T00:50:27.724917694Z",
+        "error": "Not Found",
+        "path": "/api/orders",
+        "status": 404
+      }
+    },
+    {
+      "name": "Product input validation",
+      "passed": true,
+      "details": {
+        "path": "/api/products",
+        "status": 400,
+        "message": "name: must not be blank; stock: must be greater than or equal to 0; price: must be greater than or equal to 0.01",
+        "timestamp": "2026-11-15T00:50:27.928100028Z",
+        "error": "Bad Request"
+      }
+    },
+    {
+      "name": "12 concurrent requests cannot oversell 3 items",
+      "passed": true,
+      "details": {
+        "confirmed": 3,
+        "rejectedAsync": 9,
+        "httpStatuses": [
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201
+        ],
+        "stock": 0
+      }
+    },
+    {
+      "name": "Bounded pagination",
+      "passed": true,
+      "details": {
+        "message": "page >= 0 and 1 <= size <= 100 required",
+        "timestamp": "2026-11-15T00:50:30.196591927Z",
+        "error": "Bad Request",
+        "path": "/api/orders",
+        "status": 400
+      }
+    }
+  ]
+}

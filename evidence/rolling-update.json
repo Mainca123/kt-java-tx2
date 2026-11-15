@@ -1,0 +1,1141 @@
+{
+  "runAt": "2026-11-15T00:51:44.360408+00:00",
+  "url": "http://localhost:18081/api/products/1",
+  "strategy": "RollingUpdate maxSurge=1 maxUnavailable=0; product replicas=2",
+  "totalRequests": 226,
+  "failedRequests": 2,
+  "rolloutExitCode": 0,
+  "rolloutOutput": "Waiting for deployment \"product-service\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"product-service\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"product-service\" rollout to finish: 1 out of 2 new replicas have been updated...\nWaiting for deployment \"product-service\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"product-service\" rollout to finish: 1 old replicas are pending termination...\nWaiting for deployment \"product-service\" rollout to finish: 1 old replicas are pending termination...\ndeployment \"product-service\" successfully rolled out\n",
+  "requests": [
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 156
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 46
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 110
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 0,
+      "valid": false,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 141
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 63
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 46
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 47
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 15
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 32
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 0,
+      "valid": false,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 16
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    },
+    {
+      "status": 200,
+      "valid": true,
+      "ms": 31
+    }
+  ]
+}

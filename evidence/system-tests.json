@@ -1,0 +1,193 @@
+{
+  "runAt": "2026-11-15T00:44:02.646906+00:00",
+  "baseUrl": "http://localhost:18080",
+  "resilience": true,
+  "passed": 14,
+  "total": 14,
+  "results": [
+    {
+      "name": "Gateway health",
+      "passed": true,
+      "details": {
+        "status": "UP",
+        "groups": [
+          "liveness",
+          "readiness"
+        ]
+      }
+    },
+    {
+      "name": "Create product",
+      "passed": true,
+      "details": {
+        "id": 6,
+        "name": "E2E decimal product",
+        "price": 19.95,
+        "stock": 10
+      }
+    },
+    {
+      "name": "gRPC lookup and exact order total",
+      "passed": true,
+      "details": {
+        "id": 3,
+        "productId": 6,
+        "productName": "E2E decimal product",
+        "quantity": 3,
+        "unitPrice": 19.95,
+        "totalPrice": 59.85,
+        "status": "PENDING",
+        "reason": null,
+        "createdAt": "2026-11-15T00:42:13.327587900Z"
+      }
+    },
+    {
+      "name": "Kafka confirms order and deducts stock",
+      "passed": true,
+      "details": {
+        "order": {
+          "id": 3,
+          "productId": 6,
+          "productName": "E2E decimal product",
+          "quantity": 3,
+          "unitPrice": 19.95,
+          "totalPrice": 59.85,
+          "status": "CONFIRMED",
+          "reason": "Stock deducted",
+          "createdAt": "2026-11-15T00:42:13.327588Z"
+        },
+        "stock": 7
+      }
+    },
+    {
+      "name": "Reject quantity zero",
+      "passed": true,
+      "details": {
+        "status": 400,
+        "path": "/api/orders",
+        "error": "Bad Request",
+        "timestamp": "2026-11-15T00:42:19.570959063Z",
+        "message": "quantity: must be greater than or equal to 1"
+      }
+    },
+    {
+      "name": "Reject insufficient stock",
+      "passed": true,
+      "details": {
+        "status": 409,
+        "path": "/api/orders",
+        "error": "Conflict",
+        "timestamp": "2026-11-15T00:42:21.641766568Z",
+        "message": "Insufficient stock"
+      }
+    },
+    {
+      "name": "gRPC missing product maps to REST 404",
+      "passed": true,
+      "details": {
+        "status": 404,
+        "path": "/api/orders",
+        "error": "Not Found",
+        "timestamp": "2026-11-15T00:42:23.723017458Z",
+        "message": "Product not found"
+      }
+    },
+    {
+      "name": "Product input validation",
+      "passed": true,
+      "details": {
+        "error": "Bad Request",
+        "timestamp": "2026-11-15T00:42:25.797392634Z",
+        "message": "stock: must be greater than or equal to 0; name: must not be blank; price: must be greater than or equal to 0.01",
+        "status": 400,
+        "path": "/api/products"
+      }
+    },
+    {
+      "name": "Kafka duplicate delivery deducts only once",
+      "passed": true,
+      "details": {
+        "stock": 7,
+        "consumerGroup": "\nGROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                   HOST            CLIENT-ID\nproduct-group   order-events    2          2               2               0               consumer-product-group-1-5af25f2f-427e-4484-9792-0d32296622cf /172.20.0.4     consumer-product-group-1\nproduct-group   order-events    1          4               4               0               consumer-product-group-1-5af25f2f-427e-4484-9792-0d32296622cf /172.20.0.4     consumer-product-group-1\nproduct-group   order-events    0          1               1               0               consumer-product-group-1-5af25f2f-427e-4484-9792-0d32296622cf /172.20.0.4     consumer-product-group-1"
+      }
+    },
+    {
+      "name": "12 concurrent requests cannot oversell 3 items",
+      "passed": true,
+      "details": {
+        "confirmed": 3,
+        "rejectedAsync": 8,
+        "httpStatuses": [
+          201,
+          201,
+          201,
+          409,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201,
+          201
+        ],
+        "stock": 0
+      }
+    },
+    {
+      "name": "Kafka outage retains a pending order",
+      "passed": true,
+      "details": {
+        "id": 15,
+        "productId": 6,
+        "productName": "E2E decimal product",
+        "quantity": 1,
+        "unitPrice": 19.95,
+        "totalPrice": 19.95,
+        "status": "PENDING",
+        "reason": null,
+        "createdAt": "2026-11-15T00:43:12.687721927Z"
+      }
+    },
+    {
+      "name": "Outbox recovers after Kafka restart",
+      "passed": true,
+      "details": {
+        "order": {
+          "id": 15,
+          "productId": 6,
+          "productName": "E2E decimal product",
+          "quantity": 1,
+          "unitPrice": 19.95,
+          "totalPrice": 19.95,
+          "status": "CONFIRMED",
+          "reason": "Stock deducted",
+          "createdAt": "2026-11-15T00:43:12.687722Z"
+        },
+        "stock": 6
+      }
+    },
+    {
+      "name": "Unavailable gRPC server returns 503",
+      "passed": true,
+      "details": {
+        "status": 503,
+        "path": "/api/orders",
+        "error": "Service Unavailable",
+        "timestamp": "2026-11-15T00:43:36.998702607Z",
+        "message": "Product service unavailable; retry later"
+      }
+    },
+    {
+      "name": "Bounded pagination",
+      "passed": true,
+      "details": {
+        "status": 400,
+        "path": "/api/orders",
+        "error": "Bad Request",
+        "timestamp": "2026-11-15T00:44:02.638283064Z",
+        "message": "page >= 0 and 1 <= size <= 100 required"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.git
+.idea
+.env
+output
+logs
+tmp
+**/target/classes
+**/target/test-classes
+**/target/generated-sources
+**/target/protoc-plugins
